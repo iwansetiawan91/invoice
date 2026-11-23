@@ -338,13 +338,13 @@
     }
 
     .inv-logo-img {
-     max-height: 110px;
-  max-width: 240px;
+  max-height: 115px;
+  max-width: 260px;
   width: auto;
   height: auto;
   object-fit: contain;
   display: block;
-    }
+}
 
     .inv-company-name {
       font-size: 1.22rem;
@@ -839,8 +839,8 @@
                         <path d="M148 76 C158 64, 168 58, 170 46 C160 50, 150 60, 148 76 Z" fill="#166534"/>
                       </svg>
                     </div>
-                    <!-- <div class="inv-company-name" id="prevCompanyName">Berkah Alam Sejahtera</div>
-                    <div class="inv-company-tagline" id="prevCompanyTagline">Supplier Ikan, Udang &amp; Bahan Pangan</div> -->
+                    <div class="inv-company-name d-none" id="prevCompanyName">Berkah Alam Sejahtera</div>
+                    <div class="inv-company-tagline d-none" id="prevCompanyTagline">Supplier Ikan, Udang & Bahan Pangan</div>
                   </div>
                 </div>
                 <div class="col-5 text-end">
@@ -2215,11 +2215,11 @@ Salam hangat,
         const logoResult = await loadImageAsDataURL(logoSource);
         const logoBlockedOffline = Boolean(logoResult && logoResult.blockedByCors);
 
-        let leftHeaderBottomY = cursorY + 4;
+        let leftHeaderBottomY = cursorY + 26;
         if (logoResult && logoResult.dataUrl) {
-          // Hitung rasio aspek asli agar logo proporsional (tinggi maks 24mm, lebar maks 52mm)
+          // Ukuran logo diperbesar (tinggi maks 34mm, lebar maks 75mm)
           const maxH = 34;
-          const maxW = 70;
+          const maxW = 75;
           const aspectRatio = logoResult.width / logoResult.height;
           let drawH = maxH;
           let drawW = drawH * aspectRatio;
@@ -2228,8 +2228,10 @@ Salam hangat,
             drawH = drawW / aspectRatio;
           }
           doc.addImage(logoResult.dataUrl, logoResult.format, margin, cursorY, drawW, drawH);
-          leftHeaderBottomY = cursorY + drawH + 5.5;
+          leftHeaderBottomY = cursorY + drawH;
         }
+
+        // (Blok teks Company Name & Tagline dihapus dari PDF)
 
         // Company Name & Tagline
         doc.setFont('helvetica', 'bold');
@@ -2263,7 +2265,7 @@ Salam hangat,
         doc.text(`JATUH TEMPO: ${dueDateStr}`, pageWidth - margin, cursorY + 28.5, { align: 'right' });
 
         // Divider Line
-        let yPos = Math.max(leftHeaderBottomY + 10, cursorY + 34);
+        let yPos = Math.max(leftHeaderBottomY + 6, cursorY + 33);
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.4);
         doc.line(margin, yPos, pageWidth - margin, yPos);
