@@ -1,0 +1,2553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAS Invoice Generator — Berkah Alam Sejahtera</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bas-green: #14532d;
+      --bas-green-light: #166534;
+      --bas-green-soft: #dcfce7;
+      --bas-blue: #0b4f8a;
+      --bas-blue-soft: #e0f2fe;
+      --bas-orange: #ea580c;
+      --bas-bg: #f1f5f9;
+      --bas-card: #ffffff;
+      --bas-border: #e2e8f0;
+      --bas-text: #0f172a;
+      --bas-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bas-bg);
+      color: var(--bas-text);
+      margin: 0;
+      padding-bottom: 88px;
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 992px) {
+      body {
+        padding-bottom: 36px;
+      }
+    }
+
+    /* Navbar Styling */
+    .bas-navbar {
+      background: linear-gradient(135deg, var(--bas-green) 0%, #166534 55%, var(--bas-blue) 100%);
+      box-shadow: 0 4px 20px rgba(20, 83, 45, 0.18);
+    }
+
+    .bas-navbar .navbar-brand {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.16);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #ffffff;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-nav-glass {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      padding: 0.45rem 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-glass:hover,
+    .btn-nav-glass:focus {
+      background: rgba(255, 255, 255, 0.26);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Cards & Form Controls */
+    .app-card {
+      background: var(--bas-card);
+      border: 1px solid var(--bas-border);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+
+    .app-card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--bas-border);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .app-card-title {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--bas-green);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-card-body {
+      padding: 18px 20px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.9rem;
+      padding: 0.55rem 0.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--bas-green-light);
+      box-shadow: 0 0 0 3px rgba(20, 83, 45, 0.14);
+    }
+
+    .form-check-input:checked {
+      background-color: var(--bas-green);
+      border-color: var(--bas-green);
+    }
+
+    .btn-bas-primary {
+      background: linear-gradient(135deg, var(--bas-green) 0%, var(--bas-green-light) 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-bas-primary:hover {
+      background: linear-gradient(135deg, #0f3f22 0%, #14532d 100%);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(20, 83, 45, 0.25);
+    }
+
+    .btn-bas-blue {
+      background: var(--bas-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .btn-bas-blue:hover {
+      background: #083d6b;
+      color: #ffffff;
+    }
+
+    .btn-bas-outline {
+      background: #ffffff;
+      color: var(--bas-green);
+      border: 1px solid var(--bas-green);
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .btn-bas-outline:hover {
+      background: var(--bas-green-soft);
+      color: var(--bas-green);
+    }
+
+    .btn-wa {
+      background: #16a34a;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .btn-wa:hover {
+      background: #15803d;
+      color: #ffffff;
+    }
+
+    /* Dynamic Item Row */
+    .item-row-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s ease;
+    }
+
+    .item-row-card:hover {
+      border-color: #94a3b8;
+    }
+
+    .item-badge-no {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bas-green);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Mobile Tab Switcher */
+    .mobile-tabs {
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--bas-border);
+      display: flex;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .mobile-tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--bas-muted);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-tab-btn.active {
+      background: var(--bas-green);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(20, 83, 45, 0.22);
+    }
+
+    /* Sticky Bottom Action Bar for Mobile */
+    .mobile-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1030;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--bas-border);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Preview Toolbar */
+    .preview-toolbar {
+      background: #ffffff;
+      border: 1px solid var(--bas-border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    /* A4 Invoice Paper Preview */
+    .invoice-paper-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .invoice-paper {
+      background: #ffffff;
+      width: 100%;
+      min-height: 820px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .inv-top-stripe {
+      height: 8px;
+      background: linear-gradient(90deg, var(--bas-green) 0%, var(--bas-green-light) 55%, var(--bas-blue) 82%, var(--bas-orange) 100%);
+    }
+
+    .inv-content {
+      padding: 28px 32px 24px 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    @media (max-width: 575.98px) {
+      .inv-content {
+        padding: 18px 16px;
+      }
+    }
+
+    .inv-logo-img {
+      max-height: 78px;
+      max-width: 180px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .inv-company-name {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: var(--bas-green);
+      line-height: 1.15;
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+
+    .inv-company-tagline {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--bas-blue);
+    }
+
+    .inv-big-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--bas-green);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .inv-meta-line {
+      font-size: 0.82rem;
+      color: #334155;
+      margin-bottom: 3px;
+    }
+
+    .inv-meta-label {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .inv-section-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bas-green);
+      margin-bottom: 4px;
+    }
+
+    .inv-recipient-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--bas-green);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      margin: 18px 0 20px 0;
+    }
+
+    .inv-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 0.84rem;
+    }
+
+    .inv-table thead th {
+      background-color: var(--bas-green);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 10px 10px;
+      text-transform: uppercase;
+      border: none;
+    }
+
+    .inv-table thead th:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+
+    .inv-table thead th:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+
+    .inv-table tbody td {
+      padding: 10px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+      color: #1e293b;
+    }
+
+    .inv-table tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .inv-due-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .inv-terms-text {
+      font-size: 0.76rem;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .inv-payment-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+    }
+
+    .inv-payment-table td {
+      padding: 2px 4px;
+      color: #1e293b;
+    }
+
+    .inv-summary-table {
+      width: 100%;
+      font-size: 0.84rem;
+      border-collapse: collapse;
+    }
+
+    .inv-summary-table td {
+      padding: 6px 8px;
+    }
+
+    .inv-summary-total-row {
+      background: var(--bas-green);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .inv-summary-total-row td:first-child {
+      border-radius: 8px 0 0 8px;
+      padding: 10px 12px;
+    }
+
+    .inv-summary-total-row td:last-child {
+      border-radius: 0 8px 8px 0;
+      padding: 10px 12px;
+    }
+
+    .inv-signature-area {
+      margin-top: 24px;
+      text-align: right;
+      position: relative;
+    }
+
+    .inv-signature-img {
+      max-height: 60px;
+      max-width: 150px;
+      object-fit: contain;
+      margin-bottom: 4px;
+    }
+
+    /* Stempel LUNAS di Preview */
+    .inv-paid-stamp {
+      position: absolute;
+      right: 28px;
+      bottom: 92px;
+      border: 3.5px solid rgba(22, 163, 74, 0.82);
+      color: rgba(22, 163, 74, 0.85);
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      padding: 4px 18px;
+      border-radius: 10px;
+      transform: rotate(-14deg);
+      pointer-events: none;
+      text-transform: uppercase;
+      background: rgba(220, 252, 231, 0.28);
+      box-shadow: inset 0 0 0 2px rgba(22, 163, 74, 0.35);
+      z-index: 5;
+    }
+
+    .inv-footer {
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 14px 32px;
+      text-align: center;
+    }
+
+    .inv-footer-thanks {
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--bas-green);
+      margin-bottom: 4px;
+    }
+
+    .inv-footer-contact {
+      font-size: 0.74rem;
+      color: #64748b;
+    }
+
+    /* Sticky Preview Column on Desktop */
+    @media (min-width: 992px) {
+      .sticky-preview-col {
+        position: sticky;
+        top: 18px;
+      }
+    }
+
+    /* Print Styles - Clean A4 Output */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+      }
+      .invoice-paper {
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        min-height: 270mm !important;
+      }
+      .inv-table thead th,
+      .inv-summary-total-row,
+      .inv-top-stripe,
+      .inv-recipient-box,
+      .inv-due-badge,
+      .inv-payment-box,
+      .inv-footer,
+      .inv-paid-stamp {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar navbar-expand-lg bas-navbar sticky-top no-print">
+    <div class="container-fluid px-3 px-lg-4 py-1">
+      <a class="navbar-brand" href="#">
+        <span class="brand-icon-box"><i class="bi bi-receipt-cutoff"></i></span>
+        <div>
+          <div style="line-height: 1.1; font-size: 1.05rem;">BAS Invoice Generator</div>
+          <div style="font-size: 0.7rem; font-weight: 500; opacity: 0.88;">Berkah Alam Sejahtera</div>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#basNavMenu" aria-label="Toggle Menu">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end mt-2 mt-lg-0" id="basNavMenu">
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-nav-glass" type="button" onclick="openCustomersModal()">
+            <i class="bi bi-people-fill me-1"></i> Pelanggan
+          </button>
+          <button class="btn btn-nav-glass" type="button" onclick="openHistoryModal()">
+            <i class="bi bi-clock-history me-1"></i> Riwayat
+          </button>
+          <button class="btn btn-nav-glass" type="button" onclick="openSettingsModal()">
+            <i class="bi bi-gear-fill me-1"></i> Pengaturan &amp; Logo
+          </button>
+          <button class="btn btn-nav-glass" type="button" onclick="fillExampleData()" title="Muat data contoh referensi">
+            <i class="bi bi-magic me-1"></i> Contoh
+          </button>
+          <button class="btn btn-nav-glass" type="button" onclick="confirmResetForm()">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="container-fluid px-3 px-lg-4 mt-3 mt-lg-4">
+
+    <!-- Mobile Tab Switcher -->
+    <div class="d-lg-none mb-3 no-print">
+      <div class="mobile-tabs">
+        <button type="button" class="mobile-tab-btn active" id="tabBtnForm" onclick="switchMobileTab('form')">
+          <i class="bi bi-pencil-square me-1"></i> Form Input
+        </button>
+        <button type="button" class="mobile-tab-btn" id="tabBtnPreview" onclick="switchMobileTab('preview')">
+          <i class="bi bi-file-earmark-text me-1"></i> Preview A4
+        </button>
+      </div>
+    </div>
+
+    <div class="row g-4 align-items-start">
+
+      <!-- ==================== LEFT COLUMN: FORM INPUT ==================== -->
+      <div class="col-12 col-lg-5 no-print" id="formPanel">
+
+        <!-- Card 1: Informasi Invoice -->
+        <div class="app-card mb-3">
+          <div class="app-card-header">
+            <h2 class="app-card-title"><i class="bi bi-file-earmark-medical"></i> Informasi Invoice</h2>
+            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1" style="font-size: 0.72rem;">Jatuh Tempo +7 Hari</span>
+          </div>
+          <div class="app-card-body">
+            <div class="row g-3">
+              <div class="col-12 col-sm-4">
+                <label class="form-label" for="invoiceNo">Nomor Invoice</label>
+                <div class="input-group">
+                  <input type="text" class="form-control fw-bold" id="invoiceNo" placeholder="001" oninput="renderPreview()">
+                  <button class="btn btn-outline-success fw-bold" type="button" onclick="incrementInvoiceNo()" title="Auto-increment nomor invoice">
+                    +1
+                  </button>
+                </div>
+              </div>
+              <div class="col-6 col-sm-4">
+                <label class="form-label" for="invoiceDate">Tanggal Invoice</label>
+                <input type="date" class="form-control" id="invoiceDate" onchange="onInvoiceDateChange()">
+              </div>
+              <div class="col-6 col-sm-4">
+                <label class="form-label" for="dueDate">Jatuh Tempo</label>
+                <input type="date" class="form-control" id="dueDate" onchange="renderPreview()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Data Penerima Tagihan -->
+        <div class="app-card mb-3">
+          <div class="app-card-header flex-wrap">
+            <h2 class="app-card-title"><i class="bi bi-person-vcard"></i> Penerima Tagihan</h2>
+            <div class="d-flex gap-2 align-items-center">
+              <select class="form-select form-select-sm" id="quickCustomerSelect" style="max-width: 175px; font-size: 0.78rem;" onchange="selectSavedCustomer(this.value)">
+                <option value="">-- Pilih Pelanggan --</option>
+              </select>
+              <button type="button" class="btn btn-sm btn-bas-outline" onclick="saveCurrentCustomer()" title="Simpan ke daftar pelanggan">
+                <i class="bi bi-bookmark-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="app-card-body">
+            <div class="mb-3">
+              <label class="form-label" for="recipientName">Nama Penerima Tagihan</label>
+              <input type="text" class="form-control" id="recipientName" placeholder="Contoh: SPPG Yayasan Humaira Sejahtera Waru" oninput="renderPreview()">
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="recipientAddress">Alamat Penerima Tagihan</label>
+              <textarea class="form-control" id="recipientAddress" rows="2" placeholder="Contoh: Desa Tagangser Laok, Kecamatan Waru." oninput="renderPreview()"></textarea>
+            </div>
+            <div>
+              <label class="form-label" for="recipientPhone">Nomor HP / WhatsApp Penerima</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-telephone text-success"></i></span>
+                <input type="text" class="form-control" id="recipientPhone" placeholder="Contoh: 0853-3910-8843" oninput="renderPreview()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Daftar Barang / Item Dinamis -->
+        <div class="app-card mb-3">
+          <div class="app-card-header">
+            <h2 class="app-card-title"><i class="bi bi-box-seam"></i> Daftar Barang / Item</h2>
+            <button type="button" class="btn btn-sm btn-bas-primary" onclick="addItemRow()">
+              <i class="bi bi-plus-lg me-1"></i> Tambah Barang
+            </button>
+          </div>
+          <div class="app-card-body">
+            <div id="itemsContainer"></div>
+            <button type="button" class="btn btn-bas-outline w-100 btn-sm mt-1" onclick="addItemRow()">
+              <i class="bi bi-plus-circle me-1"></i> Tambah Baris Barang Lainnya
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Ringkasan, Pajak, DP & Stempel LUNAS -->
+        <div class="app-card mb-3">
+          <div class="app-card-header">
+            <h2 class="app-card-title"><i class="bi bi-calculator"></i> Ringkasan &amp; Status</h2>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" role="switch" id="togglePaidStamp" onchange="renderPreview()">
+              <label class="form-check-label small fw-bold text-success" for="togglePaidStamp">Stempel LUNAS</label>
+            </div>
+          </div>
+          <div class="app-card-body">
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <label class="form-label" for="taxValue">Pajak (Opsional)</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="taxValue" min="0" step="any" value="0" oninput="renderPreview()">
+                  <select class="form-select" id="taxType" style="max-width: 72px;" onchange="renderPreview()">
+                    <option value="rp">Rp</option>
+                    <option value="pct">%</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="dpAmount">DP / Uang Muka (Rp)</label>
+                <input type="number" class="form-control" id="dpAmount" min="0" step="any" value="0" oninput="renderPreview()">
+              </div>
+            </div>
+
+            <div class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted fw-semibold">Sub-Total</span>
+                <span class="fw-bold" id="formSubTotal">Rp. 0</span>
+              </div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted fw-semibold">Pajak</span>
+                <span class="fw-bold" id="formTaxTotal">0</span>
+              </div>
+              <div class="d-flex justify-content-between small mb-2 d-none" id="formDpRow">
+                <span class="text-muted fw-semibold">DP / Uang Muka</span>
+                <span class="fw-bold text-primary" id="formDpTotal">- Rp. 0</span>
+              </div>
+              <hr class="my-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold text-success">Sisa Tagihan</span>
+                <span class="fs-5 fw-extrabold text-success" id="formGrandTotal">Rp. 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==================== RIGHT COLUMN: LIVE PREVIEW ==================== -->
+      <div class="col-12 col-lg-7 d-none d-lg-block sticky-preview-col print-only-container" id="previewPanel">
+
+        <!-- Desktop Action Toolbar -->
+        <div class="preview-toolbar no-print">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
+              <i class="bi bi-eye-fill me-1"></i> Live Preview A4
+            </span>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-bas-primary btn-sm px-3 py-2" id="btnDownloadPdfDesktop" onclick="generatePDF()">
+              <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF
+            </button>
+            <button type="button" class="btn btn-bas-blue btn-sm px-3 py-2" onclick="window.print()">
+              <i class="bi bi-printer-fill me-1"></i> Cetak Langsung
+            </button>
+            <button type="button" class="btn btn-wa btn-sm px-3 py-2" onclick="sendWhatsApp()">
+              <i class="bi bi-whatsapp me-1"></i> Kirim WhatsApp
+            </button>
+            <button type="button" class="btn btn-bas-outline btn-sm px-3 py-2" onclick="saveToHistory()">
+              <i class="bi bi-save2-fill me-1"></i> Simpan
+            </button>
+          </div>
+        </div>
+
+        <!-- A4 Invoice Paper -->
+        <div class="invoice-paper-wrapper">
+          <div class="invoice-paper" id="invoicePreviewPaper">
+            <div class="inv-top-stripe"></div>
+
+            <div class="inv-content">
+              <!-- Optional LUNAS Stamp -->
+              <div id="prevPaidStamp" class="inv-paid-stamp d-none">LUNAS</div>
+
+              <!-- Header -->
+              <div class="row g-3 align-items-start pb-3 border-bottom">
+                <div class="col-7">
+                  <div class="d-flex flex-column align-items-start">
+                    <img id="previewLogoImg" src="logo-bas.jpeg" alt="Logo Berkah Alam Sejahtera" class="inv-logo-img" onerror="handleLogoError()">
+                    <div id="previewLogoFallback" class="d-none">
+                      <svg width="110" height="64" viewBox="0 0 180 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 65 C30 15, 145 15, 155 65" stroke="#166534" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        <path d="M38 56 C48 30, 82 26, 102 36 C96 42, 96 48, 100 54 C80 65, 52 64, 38 56 Z" fill="#0b4f8a"/>
+                        <path d="M38 56 L24 44 L28 56 L24 68 Z" fill="#0b4f8a"/>
+                        <circle cx="88" cy="39" r="3" fill="#ffffff"/>
+                        <path d="M115 44 C135 42, 146 56, 134 72 C128 78, 118 78, 114 73 C124 70, 128 60, 120 53 Z" fill="#ea580c"/>
+                        <path d="M115 44 C122 32, 138 30, 148 38" stroke="#ea580c" stroke-width="2" fill="none"/>
+                        <path d="M18 82 Q55 68 95 82 T162 80" stroke="#0b4f8a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        <path d="M28 92 Q68 80 112 92" stroke="#166534" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        <path d="M148 76 C158 64, 168 58, 170 46 C160 50, 150 60, 148 76 Z" fill="#166534"/>
+                      </svg>
+                    </div>
+                    <div class="inv-company-name" id="prevCompanyName">Berkah Alam Sejahtera</div>
+                    <div class="inv-company-tagline" id="prevCompanyTagline">Supplier Ikan, Udang &amp; Bahan Pangan</div>
+                  </div>
+                </div>
+                <div class="col-5 text-end">
+                  <div class="inv-big-title">INVOICE</div>
+                  <div class="inv-meta-line">
+                    <span class="inv-meta-label">INVOICE #</span> <span id="prevInvoiceNo">001</span>
+                  </div>
+                  <div class="inv-meta-line">
+                    <span class="inv-meta-label">INVOICE DATE:</span> <span id="prevInvoiceDate">24 November 2026</span>
+                  </div>
+                  <div class="inv-meta-line">
+                    <span class="inv-meta-label">JATUH TEMPO:</span> <span id="prevDueDateTop">01 Desember 2026</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recipient -->
+              <div class="inv-recipient-box">
+                <div class="inv-section-label">PENERIMA TAGIHAN</div>
+                <div class="fw-bold text-dark" style="font-size: 0.96rem;" id="prevRecipientName">-</div>
+                <div class="text-secondary small mt-1" id="prevRecipientAddress" style="white-space: pre-line;">-</div>
+                <div class="text-secondary small mt-1" id="prevRecipientPhone">-</div>
+              </div>
+
+              <!-- Items Table -->
+              <div class="table-responsive">
+                <table class="inv-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 7%;" class="text-center">NO</th>
+                      <th style="width: 43%;">DESKRIPSI</th>
+                      <th style="width: 20%;" class="text-end">HARGA</th>
+                      <th style="width: 10%;" class="text-center">QTY</th>
+                      <th style="width: 20%;" class="text-end">TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody id="prevItemsBody"></tbody>
+                </table>
+              </div>
+
+              <!-- Bottom 2 Columns -->
+              <div class="row g-4 mt-auto pt-2">
+                <!-- Left Column: Due Date, Terms, Payment Method -->
+                <div class="col-12 col-sm-7">
+                  <div class="inv-due-badge">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>JATUH TEMPO: <span id="prevDueDate">01 Desember 2026</span></span>
+                  </div>
+
+                  <div class="inv-section-label">SYARAT &amp; KETENTUAN</div>
+                  <p class="inv-terms-text" id="prevTerms">
+                    Mohon selesaikan pembayaran sebelum jatuh tempo ke rekening di bawah ini, serta kirimkan bukti transfer untuk konfirmasi.
+                  </p>
+
+                  <div class="inv-payment-box">
+                    <div class="inv-section-label mb-1">METODE PEMBAYARAN</div>
+                    <table class="inv-payment-table w-100">
+                      <tr>
+                        <td style="width: 42%;" class="text-muted">Bank</td>
+                        <td style="width: 6%;">:</td>
+                        <td class="fw-bold" id="prevBankName">BRI</td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Account Name</td>
+                        <td>:</td>
+                        <td class="fw-bold" id="prevAccountName">Iwan Setiawan</td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Account Number</td>
+                        <td>:</td>
+                        <td class="fw-bold" id="prevAccountNumber">6470-01-025250-53-4</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Right Column: Summary & Signature -->
+                <div class="col-12 col-sm-5 d-flex flex-column justify-content-between">
+                  <div>
+                    <table class="inv-summary-table">
+                      <tr>
+                        <td class="text-muted fw-semibold">SUB-TOTAL</td>
+                        <td class="text-end fw-bold" id="prevSubTotal">Rp. 0</td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted fw-semibold">PAJAK</td>
+                        <td class="text-end fw-bold" id="prevTax">0</td>
+                      </tr>
+                      <tr id="prevDpRow" class="d-none">
+                        <td class="text-muted fw-semibold">DP / UANG MUKA</td>
+                        <td class="text-end fw-bold text-primary" id="prevDp">- Rp. 0</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding: 4px 0;"></td>
+                      </tr>
+                      <tr class="inv-summary-total-row">
+                        <td>Sisa Tagihan</td>
+                        <td class="text-end" id="prevRemaining">Rp. 0</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <!-- Signature -->
+                  <div class="inv-signature-area">
+                    <img id="prevSignatureImg" src="" alt="Tanda Tangan" class="inv-signature-img d-none">
+                    <div id="prevSignatureSpacer" style="height: 46px;"></div>
+                    <div class="fw-bold text-dark" style="font-size: 0.92rem;" id="prevSignerName">Pratiwi Setyawati</div>
+                    <div class="text-muted small" id="prevSignerTitle">President</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="inv-footer">
+              <div class="inv-footer-thanks">THANK YOU FOR YOUR BUSINESS</div>
+              <div class="inv-footer-contact" id="prevFooterContact">
+                Perum Samatan Asri A.0842 &nbsp;|&nbsp; 082336066699 &nbsp;|&nbsp; pratiwi.setyawati@gmail.com
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MOBILE STICKY BOTTOM ACTION BAR ==================== -->
+  <div class="mobile-bottom-bar d-lg-none no-print">
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-bas-primary flex-grow-1 py-2" onclick="generatePDF()">
+        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF
+      </button>
+      <button type="button" class="btn btn-bas-blue py-2 px-3" onclick="window.print()" title="Cetak Langsung">
+        <i class="bi bi-printer-fill"></i>
+      </button>
+      <button type="button" class="btn btn-wa py-2 px-3" onclick="sendWhatsApp()" title="Kirim WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+      </button>
+      <button type="button" class="btn btn-bas-outline py-2 px-3" onclick="saveToHistory()" title="Simpan ke Riwayat">
+        <i class="bi bi-save2"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: PELANGGAN TERSIMPAN ==================== -->
+  <div class="modal fade no-print" id="customersModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-success"><i class="bi bi-people-fill me-2"></i>Daftar Pelanggan Tersimpan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-light border small text-muted mb-3">
+            <i class="bi bi-info-circle me-1 text-success"></i> Data pelanggan disimpan otomatis di browser Anda (<code>localStorage</code>). Klik <strong>Gunakan</strong> untuk mengisi form penerima secara instan.
+          </div>
+          <div id="customersListContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: RIWAYAT INVOICE ==================== -->
+  <div class="modal fade no-print" id="historyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-success"><i class="bi bi-clock-history me-2"></i>Riwayat Invoice Lokal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <div id="historyListContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: PENGATURAN PERUSAHAAN, LOGO & BACKUP ==================== -->
+  <div class="modal fade no-print" id="settingsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold text-success"><i class="bi bi-gear-fill me-2"></i>Pengaturan Perusahaan, Logo &amp; Backup</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <!-- Logo Upload & Status -->
+            <div class="col-12">
+              <div class="p-3 rounded-3 bg-light border d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <img id="settingsLogoPreview" src="logo-bas.jpeg" alt="Logo Preview" style="height: 60px; max-width: 130px; object-fit: contain; background: #fff; padding: 4px; border-radius: 8px; border: 1px solid #cbd5e1;" onerror="this.style.opacity='0.3'">
+                  <div>
+                    <div class="fw-bold small d-flex flex-wrap align-items-center gap-2">
+                      <span>Logo Perusahaan (JPG / PNG)</span>
+                      <span id="logoStatusBadge" class="badge rounded-pill bg-secondary">File Default</span>
+                    </div>
+                    <div class="text-muted mt-1" style="font-size: 0.75rem;">
+                      Unggah <code>logo-bas.jpeg</code> sekali di sini agar tersimpan sebagai Base64 di browser &amp; selalu muncul saat Download PDF (termasuk mode offline <code>file://</code>).
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <label class="btn btn-sm btn-bas-primary mb-0" style="cursor: pointer;">
+                    <i class="bi bi-upload me-1"></i> Upload Logo
+                    <input type="file" accept="image/*" class="d-none" onchange="handleImageUpload(event, 'logo')">
+                  </label>
+                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearUploadedImage('logo')" title="Reset ke file default logo-bas.jpeg">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Company Info -->
+            <div class="col-md-6">
+              <label class="form-label">Nama Perusahaan</label>
+              <input type="text" class="form-control" id="setCompanyName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tagline / Bidang Usaha</label>
+              <input type="text" class="form-control" id="setCompanyTagline">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Alamat Perusahaan</label>
+              <input type="text" class="form-control" id="setCompanyAddress">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Telepon Perusahaan</label>
+              <input type="text" class="form-control" id="setCompanyPhone">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Email Perusahaan</label>
+              <input type="email" class="form-control" id="setCompanyEmail">
+            </div>
+
+            <div class="col-12"><hr class="my-1"></div>
+
+            <!-- Bank Info -->
+            <div class="col-md-4">
+              <label class="form-label">Nama Bank</label>
+              <input type="text" class="form-control" id="setBankName">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Atas Nama Rekening</label>
+              <input type="text" class="form-control" id="setAccountName">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Nomor Rekening</label>
+              <input type="text" class="form-control" id="setAccountNumber">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Syarat &amp; Ketentuan Pembayaran</label>
+              <textarea class="form-control" id="setTerms" rows="2"></textarea>
+            </div>
+
+            <div class="col-12"><hr class="my-1"></div>
+
+            <!-- Signature Info -->
+            <div class="col-md-6">
+              <label class="form-label">Nama Penandatangan</label>
+              <input type="text" class="form-control" id="setSignerName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Jabatan</label>
+              <input type="text" class="form-control" id="setSignerTitle">
+            </div>
+
+            <div class="col-12">
+              <div class="p-3 rounded-3 bg-light border d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <img id="settingsSigPreview" src="" alt="TTD" class="d-none" style="height: 48px; max-width: 120px; object-fit: contain; background: #fff; padding: 4px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                  <div>
+                    <div class="fw-bold small d-flex flex-wrap align-items-center gap-2">
+                      <span>Gambar Tanda Tangan / Stempel (Opsional)</span>
+                      <span id="sigStatusBadge" class="badge rounded-pill bg-secondary">Belum Diunggah</span>
+                    </div>
+                    <div class="text-muted mt-1" style="font-size: 0.75rem;">Disarankan format PNG transparan agar rapi di atas invoice PDF.</div>
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <label class="btn btn-sm btn-bas-outline mb-0" style="cursor: pointer;">
+                    <i class="bi bi-pen me-1"></i> Upload TTD
+                    <input type="file" accept="image/*" class="d-none" onchange="handleImageUpload(event, 'signature')">
+                  </label>
+                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearUploadedImage('signature')" title="Hapus tanda tangan">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12"><hr class="my-1"></div>
+
+            <!-- Export / Import Backup JSON -->
+            <div class="col-12">
+              <div class="p-3 rounded-3 border d-flex flex-wrap align-items-center justify-content-between gap-3" style="background: var(--bas-blue-soft); border-color: #bae6fd !important;">
+                <div>
+                  <div class="fw-bold small text-dark"><i class="bi bi-cloud-arrow-down-fill text-primary me-1"></i> Backup &amp; Restore Data (JSON)</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">Simpan cadangan pengaturan, logo, pelanggan, dan seluruh riwayat invoice ke file JSON.</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-bas-blue" onclick="exportBackupJSON()">
+                    <i class="bi bi-download me-1"></i> Export JSON
+                  </button>
+                  <label class="btn btn-sm btn-light border mb-0 fw-semibold" style="cursor: pointer;">
+                    <i class="bi bi-upload me-1"></i> Import JSON
+                    <input type="file" accept=".json" class="d-none" onchange="importBackupJSON(event)">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="resetDefaultSettings()">Kembalikan Default</button>
+          <button type="button" class="btn btn-bas-primary px-4" onclick="saveSettings()">
+            <i class="bi bi-check-lg me-1"></i> Simpan Pengaturan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPTS (CDN) ==================== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    /* =========================================================================
+       STATE & CONSTANTS
+       ========================================================================= */
+    const STORAGE_KEYS = {
+      SETTINGS: 'bas_invoice_settings_v2',
+      CUSTOMERS: 'bas_invoice_customers_v2',
+      HISTORY: 'bas_invoice_history_v2',
+      LAST_INV_NO: 'bas_invoice_last_no_v2',
+      FIRST_VISIT: 'bas_invoice_visited_v2'
+    };
+
+    const DEFAULT_SETTINGS = {
+      companyName: 'Berkah Alam Sejahtera',
+      companyTagline: 'Supplier Ikan, Udang & Bahan Pangan',
+      companyAddress: 'Perum Samatan Asri A.0842',
+      companyPhone: '082336066699',
+      companyEmail: 'pratiwi.setyawati@gmail.com',
+      bankName: 'BRI',
+      accountName: 'Iwan Setiawan',
+      accountNumber: '6470-01-025250-53-4',
+      terms: 'Mohon selesaikan pembayaran sebelum jatuh tempo ke rekening di bawah ini, serta kirimkan bukti transfer untuk konfirmasi.',
+      signerName: 'Pratiwi Setyawati',
+      signerTitle: 'President',
+      logoDataUrl: '',
+      signatureDataUrl: ''
+    };
+
+    const BULAN_ID = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    let appSettings = { ...DEFAULT_SETTINGS };
+    let savedCustomers = [];
+    let invoiceHistory = [];
+    let items = [];
+    let logoLoadFailed = false;
+
+    let customersModalInstance = null;
+    let historyModalInstance = null;
+    let settingsModalInstance = null;
+
+    /* =========================================================================
+       UTILITIES: FORMATTERS & DATE HELPERS
+       ========================================================================= */
+    function formatRupiah(num) {
+      const n = Math.round(Number(num) || 0);
+      return 'Rp. ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function formatQty(val) {
+      const n = Number(val);
+      if (isNaN(n)) return '0';
+      if (Number.isInteger(n)) return n.toString();
+      return n.toString().replace('.', ',');
+    }
+
+    function toInputDateString(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDaysToDateString(dateStr, days) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-').map(Number);
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      d.setDate(d.getDate() + days);
+      return toInputDateString(d);
+    }
+
+    function formatDateIndo(dateStr) {
+      if (!dateStr) return '-';
+      const parts = dateStr.split('-').map(Number);
+      if (parts.length !== 3) return dateStr;
+      const day = String(parts[2]).padStart(2, '0');
+      const month = BULAN_ID[parts[1] - 1] || '';
+      const year = parts[0];
+      return `${day} ${month} ${year}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showToast(icon, title) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: icon,
+        title: title,
+        showConfirmButton: false,
+        timer: 2400,
+        timerProgressBar: true
+      });
+    }
+
+    /* =========================================================================
+       LOCALSTORAGE LOAD & SAVE
+       ========================================================================= */
+    function loadAllData() {
+      try {
+        const s = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+        if (s) appSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(s) };
+
+        const c = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
+        if (c) savedCustomers = JSON.parse(c);
+
+        const h = localStorage.getItem(STORAGE_KEYS.HISTORY);
+        if (h) invoiceHistory = JSON.parse(h);
+      } catch (err) {
+        console.error('Gagal memuat data localStorage:', err);
+      }
+    }
+
+    function persistSettings() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(appSettings));
+      } catch (e) {
+        Swal.fire('Penyimpanan Penuh', 'Gagal menyimpan pengaturan ke browser. Coba gunakan gambar dengan ukuran lebih kecil.', 'warning');
+      }
+    }
+
+    function persistCustomers() {
+      localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(savedCustomers));
+      populateQuickCustomerDropdown();
+    }
+
+    function persistHistory() {
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(invoiceHistory));
+    }
+
+    /* =========================================================================
+       INITIALIZATION
+       ========================================================================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      customersModalInstance = new bootstrap.Modal(document.getElementById('customersModal'));
+      historyModalInstance = new bootstrap.Modal(document.getElementById('historyModal'));
+      settingsModalInstance = new bootstrap.Modal(document.getElementById('settingsModal'));
+
+      loadAllData();
+      applySettingsToPreview();
+      populateQuickCustomerDropdown();
+
+      const visited = localStorage.getItem(STORAGE_KEYS.FIRST_VISIT);
+      if (!visited) {
+        fillExampleData(true);
+        localStorage.setItem(STORAGE_KEYS.FIRST_VISIT, 'true');
+      } else {
+        fillExampleData(true);
+      }
+    });
+
+    function initFreshForm() {
+      const lastNo = localStorage.getItem(STORAGE_KEYS.LAST_INV_NO) || '001';
+      document.getElementById('invoiceNo').value = lastNo;
+
+      const todayStr = toInputDateString(new Date());
+      document.getElementById('invoiceDate').value = todayStr;
+      document.getElementById('dueDate').value = addDaysToDateString(todayStr, 7);
+
+      document.getElementById('recipientName').value = '';
+      document.getElementById('recipientAddress').value = '';
+      document.getElementById('recipientPhone').value = '';
+      document.getElementById('taxValue').value = 0;
+      document.getElementById('taxType').value = 'rp';
+      document.getElementById('dpAmount').value = 0;
+      document.getElementById('togglePaidStamp').checked = false;
+
+      items = [{ name: '', price: 0, qty: 1 }];
+      renderItemInputs();
+      renderPreview();
+    }
+
+    function fillExampleData(silent = false) {
+      document.getElementById('invoiceNo').value = '001';
+      document.getElementById('invoiceDate').value = '2026-11-24';
+      document.getElementById('dueDate').value = '2026-12-01';
+      document.getElementById('recipientName').value = 'SPPG Yayasan Humaira Sejahtera Waru';
+      document.getElementById('recipientAddress').value = 'Desa Tagangser Laok, Kecamatan Waru.';
+      document.getElementById('recipientPhone').value = '0853-3910-8843';
+      document.getElementById('taxValue').value = 0;
+      document.getElementById('taxType').value = 'rp';
+      document.getElementById('dpAmount').value = 0;
+      document.getElementById('togglePaidStamp').checked = false;
+
+      items = [
+        { name: 'IKAN NILA FRESH SIZE 9-10', price: 29000, qty: 236 }
+      ];
+
+      renderItemInputs();
+      renderPreview();
+      if (!silent) showToast('success', 'Data contoh referensi berhasil dimuat');
+    }
+
+    function confirmResetForm() {
+      Swal.fire({
+        title: 'Reset Form Invoice?',
+        text: 'Semua isian pada form saat ini akan dikosongkan.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#14532d',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Reset',
+        cancelButtonText: 'Batal'
+      }).then((res) => {
+        if (res.isConfirmed) {
+          initFreshForm();
+          showToast('info', 'Form telah direset');
+        }
+      });
+    }
+
+    /* =========================================================================
+       MOBILE TAB SWITCHER
+       ========================================================================= */
+    function switchMobileTab(tab) {
+      const formPanel = document.getElementById('formPanel');
+      const previewPanel = document.getElementById('previewPanel');
+      const btnForm = document.getElementById('tabBtnForm');
+      const btnPreview = document.getElementById('tabBtnPreview');
+
+      if (tab === 'form') {
+        formPanel.classList.remove('d-none');
+        previewPanel.classList.add('d-none');
+        previewPanel.classList.add('d-lg-block');
+        btnForm.classList.add('active');
+        btnPreview.classList.remove('active');
+      } else {
+        formPanel.classList.add('d-none');
+        formPanel.classList.add('d-lg-block');
+        previewPanel.classList.remove('d-none');
+        btnPreview.classList.add('active');
+        btnForm.classList.remove('active');
+        renderPreview();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* =========================================================================
+       INVOICE NUMBER & DATE AUTO-CALCULATION
+       ========================================================================= */
+    function incrementInvoiceNo() {
+      const input = document.getElementById('invoiceNo');
+      const raw = input.value.trim();
+      const match = raw.match(/(\d+)$/);
+      let nextVal = '001';
+      if (match) {
+        const numStr = match[1];
+        const prefix = raw.slice(0, raw.length - numStr.length);
+        const incremented = String(parseInt(numStr, 10) + 1).padStart(numStr.length, '0');
+        nextVal = prefix + incremented;
+      } else {
+        nextVal = raw ? raw + '-001' : '001';
+      }
+      input.value = nextVal;
+      localStorage.setItem(STORAGE_KEYS.LAST_INV_NO, nextVal);
+      renderPreview();
+      showToast('success', `Nomor invoice diubah ke #${nextVal}`);
+    }
+
+    function onInvoiceDateChange() {
+      const invDate = document.getElementById('invoiceDate').value;
+      if (invDate) {
+        document.getElementById('dueDate').value = addDaysToDateString(invDate, 7);
+      }
+      renderPreview();
+    }
+
+    /* =========================================================================
+       DYNAMIC ITEMS MANAGEMENT
+       ========================================================================= */
+    function renderItemInputs() {
+      const container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+
+      items.forEach((item, idx) => {
+        const rowTotal = (Number(item.price) || 0) * (Number(item.qty) || 0);
+        const div = document.createElement('div');
+        div.className = 'item-row-card';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="item-badge-no">${idx + 1}</span>
+              <span class="small fw-bold text-secondary">Item #${idx + 1}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="small fw-bold text-success" id="itemRowTotal_${idx}">${formatRupiah(rowTotal)}</span>
+              ${items.length > 1 ? `
+                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" onclick="removeItemRow(${idx})" title="Hapus baris">
+                  <i class="bi bi-trash"></i>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          <div class="row g-2">
+            <div class="col-12">
+              <input type="text" class="form-control form-control-sm" placeholder="Nama Barang / Deskripsi (misal: IKAN NILA FRESH SIZE 9-10)"
+                value="${escapeHtml(item.name)}" oninput="updateItemField(${idx}, 'name', this.value)">
+            </div>
+            <div class="col-7">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white text-muted">Rp</span>
+                <input type="number" class="form-control" min="0" step="any" placeholder="Harga Satuan"
+                  value="${item.price === 0 ? '' : item.price}" oninput="updateItemField(${idx}, 'price', this.value)">
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white text-muted">Qty</span>
+                <input type="number" class="form-control" min="0" step="any" placeholder="Vol"
+                  value="${item.qty}" oninput="updateItemField(${idx}, 'qty', this.value)">
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addItemRow() {
+      items.push({ name: '', price: 0, qty: 1 });
+      renderItemInputs();
+      renderPreview();
+    }
+
+    function removeItemRow(index) {
+      if (items.length <= 1) return;
+      items.splice(index, 1);
+      renderItemInputs();
+      renderPreview();
+    }
+
+    function updateItemField(index, field, value) {
+      if (!items[index]) return;
+      if (field === 'name') {
+        items[index].name = value;
+      } else {
+        items[index][field] = parseFloat(value) || 0;
+      }
+      const rowTotal = (Number(items[index].price) || 0) * (Number(items[index].qty) || 0);
+      const totalEl = document.getElementById(`itemRowTotal_${index}`);
+      if (totalEl) totalEl.textContent = formatRupiah(rowTotal);
+      renderPreview();
+    }
+
+    /* =========================================================================
+       CALCULATIONS & LIVE PREVIEW RENDERING
+       ========================================================================= */
+    function getCalculatedTotals() {
+      const subTotal = items.reduce((sum, it) => sum + ((Number(it.price) || 0) * (Number(it.qty) || 0)), 0);
+      const taxRaw = parseFloat(document.getElementById('taxValue').value) || 0;
+      const taxType = document.getElementById('taxType').value;
+      const taxAmount = taxType === 'pct' ? Math.round(subTotal * (taxRaw / 100)) : Math.round(taxRaw);
+      const grandTotal = subTotal + taxAmount;
+      const dpAmount = Math.round(parseFloat(document.getElementById('dpAmount').value) || 0);
+      const remaining = Math.max(0, grandTotal - dpAmount);
+      return { subTotal, taxAmount, taxRaw, taxType, grandTotal, dpAmount, remaining };
+    }
+
+    function renderPreview() {
+      const invNo = document.getElementById('invoiceNo').value.trim() || '001';
+      const invDate = document.getElementById('invoiceDate').value;
+      const dueDate = document.getElementById('dueDate').value;
+      const recName = document.getElementById('recipientName').value.trim();
+      const recAddr = document.getElementById('recipientAddress').value.trim();
+      const recPhone = document.getElementById('recipientPhone').value.trim();
+      const isPaid = document.getElementById('togglePaidStamp').checked;
+
+      localStorage.setItem(STORAGE_KEYS.LAST_INV_NO, invNo);
+
+      document.getElementById('prevInvoiceNo').textContent = invNo;
+      document.getElementById('prevInvoiceDate').textContent = formatDateIndo(invDate);
+      document.getElementById('prevDueDate').textContent = formatDateIndo(dueDate);
+      document.getElementById('prevDueDateTop').textContent = formatDateIndo(dueDate);
+
+      document.getElementById('prevRecipientName').textContent = recName || 'Nama Penerima Tagihan';
+      document.getElementById('prevRecipientAddress').textContent = recAddr || 'Alamat Penerima Tagihan';
+      document.getElementById('prevRecipientPhone').textContent = recPhone || '-';
+
+      // Stempel LUNAS
+      const paidStamp = document.getElementById('prevPaidStamp');
+      if (isPaid) {
+        paidStamp.classList.remove('d-none');
+      } else {
+        paidStamp.classList.add('d-none');
+      }
+
+      // Items Table
+      const tbody = document.getElementById('prevItemsBody');
+      tbody.innerHTML = '';
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Belum ada barang ditambahkan</td></tr>`;
+      } else {
+        items.forEach((it, idx) => {
+          const lineTotal = (Number(it.price) || 0) * (Number(it.qty) || 0);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="text-center fw-semibold">${idx + 1}</td>
+            <td class="fw-semibold">${escapeHtml(it.name || '-')}</td>
+            <td class="text-end text-nowrap">${formatRupiah(it.price)}</td>
+            <td class="text-center">${formatQty(it.qty)}</td>
+            <td class="text-end fw-bold text-nowrap">${formatRupiah(lineTotal)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Totals
+      const totals = getCalculatedTotals();
+
+      document.getElementById('formSubTotal').textContent = formatRupiah(totals.subTotal);
+      document.getElementById('formTaxTotal').textContent = totals.taxAmount > 0 ? formatRupiah(totals.taxAmount) : '0';
+      const formDpRow = document.getElementById('formDpRow');
+      if (totals.dpAmount > 0) {
+        formDpRow.classList.remove('d-none');
+        document.getElementById('formDpTotal').textContent = '- ' + formatRupiah(totals.dpAmount);
+      } else {
+        formDpRow.classList.add('d-none');
+      }
+      document.getElementById('formGrandTotal').textContent = formatRupiah(totals.remaining);
+
+      document.getElementById('prevSubTotal').textContent = formatRupiah(totals.subTotal);
+      document.getElementById('prevTax').textContent = totals.taxAmount > 0 ? formatRupiah(totals.taxAmount) : '0';
+      const prevDpRow = document.getElementById('prevDpRow');
+      if (totals.dpAmount > 0) {
+        prevDpRow.classList.remove('d-none');
+        document.getElementById('prevDp').textContent = '- ' + formatRupiah(totals.dpAmount);
+      } else {
+        prevDpRow.classList.add('d-none');
+      }
+      document.getElementById('prevRemaining').textContent = formatRupiah(totals.remaining);
+    }
+
+    /* =========================================================================
+       LOGO & COMPANY SETTINGS MANAGEMENT
+       ========================================================================= */
+    function handleLogoError() {
+      logoLoadFailed = true;
+      document.getElementById('previewLogoImg').classList.add('d-none');
+      document.getElementById('previewLogoFallback').classList.remove('d-none');
+    }
+
+    function updateMediaStatusBadges() {
+      const logoBadge = document.getElementById('logoStatusBadge');
+      const sigBadge = document.getElementById('sigStatusBadge');
+
+      if (appSettings.logoDataUrl && appSettings.logoDataUrl.startsWith('data:image/')) {
+        logoBadge.className = 'badge rounded-pill bg-success';
+        logoBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Tersimpan di browser / Siap PDF Offline';
+      } else {
+        logoBadge.className = 'badge rounded-pill bg-warning text-dark';
+        logoBadge.innerHTML = '<i class="bi bi-folder2-open me-1"></i>File Default (logo-bas.jpeg)';
+      }
+
+      if (appSettings.signatureDataUrl && appSettings.signatureDataUrl.startsWith('data:image/')) {
+        sigBadge.className = 'badge rounded-pill bg-success';
+        sigBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Tersimpan di browser / Siap PDF Offline';
+      } else {
+        sigBadge.className = 'badge rounded-pill bg-secondary';
+        sigBadge.textContent = 'Belum Diunggah';
+      }
+    }
+
+    function applySettingsToPreview() {
+      document.getElementById('prevCompanyName').textContent = appSettings.companyName;
+      document.getElementById('prevCompanyTagline').textContent = appSettings.companyTagline;
+      document.getElementById('prevTerms').textContent = appSettings.terms;
+      document.getElementById('prevBankName').textContent = appSettings.bankName;
+      document.getElementById('prevAccountName').textContent = appSettings.accountName;
+      document.getElementById('prevAccountNumber').textContent = appSettings.accountNumber;
+      document.getElementById('prevSignerName').textContent = appSettings.signerName;
+      document.getElementById('prevSignerTitle').textContent = appSettings.signerTitle;
+      document.getElementById('prevFooterContact').innerHTML =
+        `${escapeHtml(appSettings.companyAddress)} &nbsp;|&nbsp; ${escapeHtml(appSettings.companyPhone)} &nbsp;|&nbsp; ${escapeHtml(appSettings.companyEmail)}`;
+
+      const logoImg = document.getElementById('previewLogoImg');
+      const logoFallback = document.getElementById('previewLogoFallback');
+      logoLoadFailed = false;
+      logoImg.classList.remove('d-none');
+      logoFallback.classList.add('d-none');
+      logoImg.src = appSettings.logoDataUrl || 'logo-bas.jpeg';
+
+      const sigImg = document.getElementById('prevSignatureImg');
+      const sigSpacer = document.getElementById('prevSignatureSpacer');
+      if (appSettings.signatureDataUrl) {
+        sigImg.src = appSettings.signatureDataUrl;
+        sigImg.classList.remove('d-none');
+        sigSpacer.classList.add('d-none');
+      } else {
+        sigImg.src = '';
+        sigImg.classList.add('d-none');
+        sigSpacer.classList.remove('d-none');
+      }
+    }
+
+    function openSettingsModal() {
+      document.getElementById('setCompanyName').value = appSettings.companyName;
+      document.getElementById('setCompanyTagline').value = appSettings.companyTagline;
+      document.getElementById('setCompanyAddress').value = appSettings.companyAddress;
+      document.getElementById('setCompanyPhone').value = appSettings.companyPhone;
+      document.getElementById('setCompanyEmail').value = appSettings.companyEmail;
+      document.getElementById('setBankName').value = appSettings.bankName;
+      document.getElementById('setAccountName').value = appSettings.accountName;
+      document.getElementById('setAccountNumber').value = appSettings.accountNumber;
+      document.getElementById('setTerms').value = appSettings.terms;
+      document.getElementById('setSignerName').value = appSettings.signerName;
+      document.getElementById('setSignerTitle').value = appSettings.signerTitle;
+
+      const logoPrev = document.getElementById('settingsLogoPreview');
+      logoPrev.style.opacity = '1';
+      logoPrev.src = appSettings.logoDataUrl || 'logo-bas.jpeg';
+
+      const sigPrev = document.getElementById('settingsSigPreview');
+      if (appSettings.signatureDataUrl) {
+        sigPrev.src = appSettings.signatureDataUrl;
+        sigPrev.classList.remove('d-none');
+      } else {
+        sigPrev.classList.add('d-none');
+      }
+
+      updateMediaStatusBadges();
+      settingsModalInstance.show();
+    }
+
+    function handleImageUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 2.5 * 1024 * 1024) {
+        Swal.fire('Ukuran Terlalu Besar', 'Maksimal ukuran gambar adalah 2.5 MB agar penyimpanan browser tetap cepat dan ringan.', 'warning');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Url = e.target.result;
+        if (type === 'logo') {
+          appSettings.logoDataUrl = base64Url;
+          const lp = document.getElementById('settingsLogoPreview');
+          lp.style.opacity = '1';
+          lp.src = base64Url;
+          showToast('success', 'Logo disimpan ke browser (Siap PDF Offline)');
+        } else {
+          appSettings.signatureDataUrl = base64Url;
+          const sp = document.getElementById('settingsSigPreview');
+          sp.src = base64Url;
+          sp.classList.remove('d-none');
+          showToast('success', 'Tanda tangan disimpan ke browser');
+        }
+        persistSettings();
+        applySettingsToPreview();
+        updateMediaStatusBadges();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function clearUploadedImage(type) {
+      if (type === 'logo') {
+        appSettings.logoDataUrl = '';
+        const lp = document.getElementById('settingsLogoPreview');
+        lp.style.opacity = '1';
+        lp.src = 'logo-bas.jpeg';
+        showToast('info', 'Logo dikembalikan ke default (logo-bas.jpeg)');
+      } else {
+        appSettings.signatureDataUrl = '';
+        document.getElementById('settingsSigPreview').classList.add('d-none');
+        showToast('info', 'Gambar tanda tangan dihapus');
+      }
+      persistSettings();
+      applySettingsToPreview();
+      updateMediaStatusBadges();
+    }
+
+    function saveSettings() {
+      appSettings.companyName = document.getElementById('setCompanyName').value.trim() || DEFAULT_SETTINGS.companyName;
+      appSettings.companyTagline = document.getElementById('setCompanyTagline').value.trim() || DEFAULT_SETTINGS.companyTagline;
+      appSettings.companyAddress = document.getElementById('setCompanyAddress').value.trim();
+      appSettings.companyPhone = document.getElementById('setCompanyPhone').value.trim();
+      appSettings.companyEmail = document.getElementById('setCompanyEmail').value.trim();
+      appSettings.bankName = document.getElementById('setBankName').value.trim();
+      appSettings.accountName = document.getElementById('setAccountName').value.trim();
+      appSettings.accountNumber = document.getElementById('setAccountNumber').value.trim();
+      appSettings.terms = document.getElementById('setTerms').value.trim();
+      appSettings.signerName = document.getElementById('setSignerName').value.trim();
+      appSettings.signerTitle = document.getElementById('setSignerTitle').value.trim();
+
+      persistSettings();
+      applySettingsToPreview();
+      settingsModalInstance.hide();
+      showToast('success', 'Pengaturan perusahaan disimpan');
+    }
+
+    function resetDefaultSettings() {
+      Swal.fire({
+        title: 'Kembalikan Pengaturan Default?',
+        text: 'Info perusahaan, rekening, dan logo custom akan dikembalikan ke bawaan Berkah Alam Sejahtera.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#14532d',
+        confirmButtonText: 'Ya, Kembalikan',
+        cancelButtonText: 'Batal'
+      }).then((res) => {
+        if (res.isConfirmed) {
+          appSettings = { ...DEFAULT_SETTINGS };
+          persistSettings();
+          applySettingsToPreview();
+          settingsModalInstance.hide();
+          showToast('success', 'Pengaturan dikembalikan ke default');
+        }
+      });
+    }
+
+    /* =========================================================================
+       CUSTOMERS MANAGEMENT (LOCALSTORAGE)
+       ========================================================================= */
+    function populateQuickCustomerDropdown() {
+      const sel = document.getElementById('quickCustomerSelect');
+      sel.innerHTML = '<option value="">-- Pilih Pelanggan --</option>';
+      savedCustomers.forEach((c) => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        sel.appendChild(opt);
+      });
+    }
+
+    function selectSavedCustomer(id) {
+      if (!id) return;
+      const found = savedCustomers.find(c => c.id === id);
+      if (found) {
+        document.getElementById('recipientName').value = found.name;
+        document.getElementById('recipientAddress').value = found.address;
+        document.getElementById('recipientPhone').value = found.phone;
+        renderPreview();
+        showToast('success', `Pelanggan "${found.name}" dipilih`);
+      }
+      document.getElementById('quickCustomerSelect').value = '';
+    }
+
+    function saveCurrentCustomer() {
+      const name = document.getElementById('recipientName').value.trim();
+      const address = document.getElementById('recipientAddress').value.trim();
+      const phone = document.getElementById('recipientPhone').value.trim();
+
+      if (!name) {
+        Swal.fire('Nama Kosong', 'Isi Nama Penerima Tagihan terlebih dahulu sebelum menyimpan.', 'warning');
+        return;
+      }
+
+      const existingIdx = savedCustomers.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
+      if (existingIdx >= 0) {
+        savedCustomers[existingIdx] = { ...savedCustomers[existingIdx], name, address, phone };
+        showToast('success', 'Data pelanggan diperbarui');
+      } else {
+        savedCustomers.unshift({ id: 'cust_' + Date.now(), name, address, phone });
+        showToast('success', 'Pelanggan baru disimpan');
+      }
+      persistCustomers();
+    }
+
+    function openCustomersModal() {
+      renderCustomersModalList();
+      customersModalInstance.show();
+    }
+
+    function renderCustomersModalList() {
+      const container = document.getElementById('customersListContainer');
+      if (savedCustomers.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-people fs-1 d-block mb-2 opacity-50"></i>
+            Belum ada pelanggan tersimpan.<br>
+            <small>Klik ikon bookmark pada form Penerima Tagihan untuk menyimpan pelanggan.</small>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = savedCustomers.map((c) => `
+        <div class="p-3 mb-2 rounded-3 border bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-bold text-dark">${escapeHtml(c.name)}</div>
+            <div class="small text-muted">${escapeHtml(c.address || '-')}</div>
+            <div class="small text-success fw-semibold"><i class="bi bi-telephone me-1"></i>${escapeHtml(c.phone || '-')}</div>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-bas-primary" onclick="useCustomerFromModal('${c.id}')">Gunakan</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteCustomer('${c.id}')"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function useCustomerFromModal(id) {
+      selectSavedCustomer(id);
+      customersModalInstance.hide();
+    }
+
+    function deleteCustomer(id) {
+      savedCustomers = savedCustomers.filter(c => c.id !== id);
+      persistCustomers();
+      renderCustomersModalList();
+      showToast('info', 'Pelanggan dihapus');
+    }
+
+    /* =========================================================================
+       INVOICE HISTORY & JSON BACKUP
+       ========================================================================= */
+    function saveToHistory() {
+      const invNo = document.getElementById('invoiceNo').value.trim() || '001';
+      const recName = document.getElementById('recipientName').value.trim();
+      if (!recName) {
+        Swal.fire('Data Belum Lengkap', 'Mohon isi Nama Penerima Tagihan terlebih dahulu.', 'warning');
+        return;
+      }
+
+      const totals = getCalculatedTotals();
+      const record = {
+        id: 'inv_' + Date.now(),
+        savedAt: new Date().toLocaleString('id-ID'),
+        invoiceNo: invNo,
+        invoiceDate: document.getElementById('invoiceDate').value,
+        dueDate: document.getElementById('dueDate').value,
+        recipientName: recName,
+        recipientAddress: document.getElementById('recipientAddress').value.trim(),
+        recipientPhone: document.getElementById('recipientPhone').value.trim(),
+        items: JSON.parse(JSON.stringify(items)),
+        taxValue: parseFloat(document.getElementById('taxValue').value) || 0,
+        taxType: document.getElementById('taxType').value,
+        dpAmount: parseFloat(document.getElementById('dpAmount').value) || 0,
+        isPaid: document.getElementById('togglePaidStamp').checked,
+        remaining: totals.remaining
+      };
+
+      invoiceHistory.unshift(record);
+      if (invoiceHistory.length > 100) invoiceHistory = invoiceHistory.slice(0, 100);
+      persistHistory();
+      showToast('success', `Invoice #${invNo} disimpan ke riwayat`);
+    }
+
+    function openHistoryModal() {
+      renderHistoryModalList();
+      historyModalInstance.show();
+    }
+
+    function renderHistoryModalList() {
+      const container = document.getElementById('historyListContainer');
+      if (invoiceHistory.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-clock-history fs-1 d-block mb-2 opacity-50"></i>
+            Belum ada riwayat invoice tersimpan.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = invoiceHistory.map((h) => `
+        <div class="p-3 mb-2 rounded-3 border bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge bg-success-subtle text-success">INV #${escapeHtml(h.invoiceNo)}</span>
+              ${h.isPaid ? '<span class="badge bg-success">LUNAS</span>' : ''}
+              <span class="fw-bold text-dark">${escapeHtml(h.recipientName)}</span>
+            </div>
+            <div class="small text-muted mt-1">
+              Tanggal: ${formatDateIndo(h.invoiceDate)} &bull; Total: <strong class="text-success">${formatRupiah(h.remaining)}</strong>
+            </div>
+            <div style="font-size: 0.72rem;" class="text-muted">Disimpan: ${escapeHtml(h.savedAt)}</div>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-bas-primary" onclick="loadFromHistory('${h.id}')">
+              <i class="bi bi-box-arrow-in-down-left me-1"></i> Muat
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteHistory('${h.id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadFromHistory(id) {
+      const h = invoiceHistory.find(item => item.id === id);
+      if (!h) return;
+
+      document.getElementById('invoiceNo').value = h.invoiceNo;
+      document.getElementById('invoiceDate').value = h.invoiceDate;
+      document.getElementById('dueDate').value = h.dueDate;
+      document.getElementById('recipientName').value = h.recipientName;
+      document.getElementById('recipientAddress').value = h.recipientAddress;
+      document.getElementById('recipientPhone').value = h.recipientPhone;
+      document.getElementById('taxValue').value = h.taxValue || 0;
+      document.getElementById('taxType').value = h.taxType || 'rp';
+      document.getElementById('dpAmount').value = h.dpAmount || 0;
+      document.getElementById('togglePaidStamp').checked = Boolean(h.isPaid);
+      items = JSON.parse(JSON.stringify(h.items || []));
+      if (items.length === 0) items = [{ name: '', price: 0, qty: 1 }];
+
+      renderItemInputs();
+      renderPreview();
+      historyModalInstance.hide();
+      showToast('success', `Invoice #${h.invoiceNo} dimuat ke editor`);
+    }
+
+    function deleteHistory(id) {
+      invoiceHistory = invoiceHistory.filter(h => h.id !== id);
+      persistHistory();
+      renderHistoryModalList();
+      showToast('info', 'Riwayat dihapus');
+    }
+
+    function exportBackupJSON() {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        app: 'BAS Invoice Generator',
+        settings: appSettings,
+        customers: savedCustomers,
+        history: invoiceHistory
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BAS_Invoice_Backup_${toInputDateString(new Date())}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('success', 'Backup JSON berhasil diunduh');
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.settings) appSettings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+          if (Array.isArray(parsed.customers)) savedCustomers = parsed.customers;
+          if (Array.isArray(parsed.history)) invoiceHistory = parsed.history;
+
+          persistSettings();
+          persistCustomers();
+          persistHistory();
+          applySettingsToPreview();
+          updateMediaStatusBadges();
+          showToast('success', 'Data backup berhasil dipulihkan!');
+        } catch (err) {
+          Swal.fire('File Tidak Valid', 'Pastikan file yang diunggah adalah file JSON backup dari aplikasi ini.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    /* =========================================================================
+       WHATSAPP INTEGRATION
+       ========================================================================= */
+    function sendWhatsApp() {
+      const rawPhone = document.getElementById('recipientPhone').value.trim();
+      let cleanPhone = rawPhone.replace(/[^0-9]/g, '');
+      if (cleanPhone.startsWith('0')) {
+        cleanPhone = '62' + cleanPhone.slice(1);
+      } else if (cleanPhone.startsWith('8')) {
+        cleanPhone = '62' + cleanPhone;
+      }
+
+      if (!cleanPhone || cleanPhone.length < 9) {
+        Swal.fire('Nomor HP Belum Valid', 'Mohon isi Nomor HP penerima tagihan yang valid untuk mengirim WhatsApp.', 'warning');
+        return;
+      }
+
+      const invNo = document.getElementById('invoiceNo').value.trim() || '001';
+      const invDate = formatDateIndo(document.getElementById('invoiceDate').value);
+      const dueDate = formatDateIndo(document.getElementById('dueDate').value);
+      const recName = document.getElementById('recipientName').value.trim() || 'Bapak/Ibu';
+      const isPaid = document.getElementById('togglePaidStamp').checked;
+      const totals = getCalculatedTotals();
+
+      const itemLines = items
+        .filter(i => i.name.trim() !== '')
+        .map((i, idx) => `${idx + 1}. ${i.name} (${formatQty(i.qty)} x ${formatRupiah(i.price)}) = ${formatRupiah(i.price * i.qty)}`)
+        .join('\n');
+
+      const statusLine = isPaid ? '\n*STATUS: LUNAS*\n' : '';
+
+      const message =
+`Halo *${recName}*,
+
+Berikut kami sampaikan rincian tagihan dari *${appSettings.companyName}*:
+
+*INVOICE #${invNo}*
+Tanggal Invoice : ${invDate}
+Jatuh Tempo     : ${dueDate}${statusLine}
+
+*Rincian Barang:*
+${itemLines || '-'}
+
+*Sisa Tagihan : ${formatRupiah(totals.remaining)}*
+
+Mohon selesaikan pembayaran sebelum jatuh tempo melalui transfer ke:
+Bank : ${appSettings.bankName}
+Atas Nama : ${appSettings.accountName}
+No. Rekening : ${appSettings.accountNumber}
+
+Mohon kirimkan bukti transfer untuk konfirmasi. Terima kasih atas kepercayaan dan kerja samanya.
+
+Salam hangat,
+*${appSettings.companyName}*`;
+
+      const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    /* =========================================================================
+       ROBUST IMAGE LOADER FOR jsPDF (FIXES LOGO MISSING IN PDF)
+       ========================================================================= */
+    function getImageDimensions(dataUrl) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve({
+          width: img.naturalWidth || 200,
+          height: img.naturalHeight || 100
+        });
+        img.onerror = () => resolve({ width: 200, height: 100 });
+        img.src = dataUrl;
+      });
+    }
+
+    function blobToDataURL(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    /**
+     * Memuat gambar menjadi DataURL (Base64) + dimensi asli secara aman:
+     * 1) Jika sudah Base64 (data:image/...), langsung pakai & ambil dimensi.
+     * 2) Jika path relatif (mis. logo-bas.jpeg), gunakan fetch() + FileReader (aman di GitHub Pages & localhost).
+     * 3) Jika fetch() gagal (mis. mode file://), fallback ke <img> + <canvas> dalam try/catch.
+     * 4) Jika terblokir CORS file://, kembalikan { blockedByCors: true } tanpa crash.
+     */
+    async function loadImageAsDataURL(src) {
+      if (!src) return null;
+
+      // 1. Sudah berbentuk Base64 (dari localStorage / upload manual)
+      if (src.startsWith('data:image/')) {
+        const dims = await getImageDimensions(src);
+        const format = src.toLowerCase().includes('image/png') ? 'PNG' : 'JPEG';
+        return { dataUrl: src, format, width: dims.width, height: dims.height };
+      }
+
+      // 2. Path relatif / URL: coba fetch + FileReader (bebas tainted canvas di GitHub Pages / localhost)
+      try {
+        const response = await fetch(src);
+        if (response.ok) {
+          const blob = await response.blob();
+          const dataUrl = await blobToDataURL(blob);
+          const dims = await getImageDimensions(dataUrl);
+          const format = (blob.type && blob.type.toLowerCase().includes('png')) || dataUrl.toLowerCase().includes('image/png')
+            ? 'PNG'
+            : 'JPEG';
+          return { dataUrl, format, width: dims.width, height: dims.height };
+        }
+      } catch (fetchErr) {
+        // Lanjut ke fallback canvas (biasanya terjadi saat dibuka langsung lewat file://)
+      }
+
+      // 3. Fallback: <img> + <canvas> dalam try/catch
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || 200;
+            canvas.height = img.naturalHeight || 100;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            resolve({
+              dataUrl,
+              format: 'PNG',
+              width: canvas.width,
+              height: canvas.height
+            });
+          } catch (canvasErr) {
+            // Terblokir CORS / Tainted Canvas pada protokol file://
+            resolve({ blockedByCors: true });
+          }
+        };
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    /* =========================================================================
+       VECTOR PDF GENERATOR (jsPDF + jsPDF-AutoTable)
+       ========================================================================= */
+    async function generatePDF() {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+        const pageWidth = doc.internal.pageSize.getWidth();   // 210 mm
+        const pageHeight = doc.internal.pageSize.getHeight(); // 297 mm
+        const margin = 16;
+
+        // Brand Colors
+        const greenDark = [20, 83, 45];    // #14532d
+        const greenLight = [22, 101, 52];  // #166534
+        const blueOcean = [11, 79, 138];   // #0b4f8a
+        const orangeAccent = [234, 88, 12];// #ea580c
+        const slateDark = [15, 23, 42];
+        const slateMuted = [100, 116, 139];
+
+        // Top Decorative Accent Bar
+        doc.setFillColor(...greenDark);
+        doc.rect(0, 0, pageWidth * 0.62, 3.5, 'F');
+        doc.setFillColor(...blueOcean);
+        doc.rect(pageWidth * 0.62, 0, pageWidth * 0.24, 3.5, 'F');
+        doc.setFillColor(...orangeAccent);
+        doc.rect(pageWidth * 0.86, 0, pageWidth * 0.14, 3.5, 'F');
+
+        // Load Logo secara tangguh
+        let cursorY = 12;
+        const logoSource = appSettings.logoDataUrl || (!logoLoadFailed ? 'logo-bas.jpeg' : '');
+        const logoResult = await loadImageAsDataURL(logoSource);
+        const logoBlockedOffline = Boolean(logoResult && logoResult.blockedByCors);
+
+        let leftHeaderBottomY = cursorY + 4;
+        if (logoResult && logoResult.dataUrl) {
+          // Hitung rasio aspek asli agar logo proporsional (tinggi maks 24mm, lebar maks 52mm)
+          const maxH = 24;
+          const maxW = 52;
+          const aspectRatio = logoResult.width / logoResult.height;
+          let drawH = maxH;
+          let drawW = drawH * aspectRatio;
+          if (drawW > maxW) {
+            drawW = maxW;
+            drawH = drawW / aspectRatio;
+          }
+          doc.addImage(logoResult.dataUrl, logoResult.format, margin, cursorY, drawW, drawH);
+          leftHeaderBottomY = cursorY + drawH + 5.5;
+        }
+
+        // Company Name & Tagline
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(...greenDark);
+        doc.text(appSettings.companyName, margin, leftHeaderBottomY);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...blueOcean);
+        doc.text(appSettings.companyTagline, margin, leftHeaderBottomY + 5);
+
+        // Header Right: INVOICE Title & Meta
+        const invNo = document.getElementById('invoiceNo').value.trim() || '001';
+        const invDateStr = formatDateIndo(document.getElementById('invoiceDate').value);
+        const dueDateStr = formatDateIndo(document.getElementById('dueDate').value);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(26);
+        doc.setTextColor(...greenDark);
+        doc.text('INVOICE', pageWidth - margin, cursorY + 10, { align: 'right' });
+
+        doc.setFontSize(9.5);
+        doc.setTextColor(...slateDark);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`INVOICE # ${invNo}`, pageWidth - margin, cursorY + 18, { align: 'right' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...slateMuted);
+        doc.text(`INVOICE DATE: ${invDateStr}`, pageWidth - margin, cursorY + 23.5, { align: 'right' });
+        doc.text(`JATUH TEMPO: ${dueDateStr}`, pageWidth - margin, cursorY + 28.5, { align: 'right' });
+
+        // Divider Line
+        let yPos = Math.max(leftHeaderBottomY + 10, cursorY + 34);
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += 7;
+
+        // Recipient Box
+        const recName = document.getElementById('recipientName').value.trim() || '-';
+        const recAddr = document.getElementById('recipientAddress').value.trim() || '-';
+        const recPhone = document.getElementById('recipientPhone').value.trim() || '-';
+
+        const addrLines = doc.splitTextToSize(recAddr, pageWidth - margin * 2 - 12);
+        const boxHeight = 17.5 + (addrLines.length * 4.5);
+
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, yPos, pageWidth - margin * 2, boxHeight, 2, 2, 'F');
+        doc.setFillColor(...greenDark);
+        doc.rect(margin, yPos, 1.8, boxHeight, 'F');
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(...greenDark);
+        doc.text('PENERIMA TAGIHAN', margin + 5, yPos + 5.5);
+
+        doc.setFontSize(10.5);
+        doc.setTextColor(...slateDark);
+        doc.text(recName, margin + 5, yPos + 11);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(71, 85, 105);
+        doc.text(addrLines, margin + 5, yPos + 16);
+        doc.text(recPhone, margin + 5, yPos + 16 + (addrLines.length * 4.5));
+
+        yPos += boxHeight + 8;
+
+        // Items Table via jsPDF-AutoTable
+        const tableRows = items.map((it, idx) => {
+          const lineTotal = (Number(it.price) || 0) * (Number(it.qty) || 0);
+          return [
+            String(idx + 1),
+            it.name || '-',
+            formatRupiah(it.price),
+            formatQty(it.qty),
+            formatRupiah(lineTotal)
+          ];
+        });
+
+        doc.autoTable({
+          startY: yPos,
+          margin: { left: margin, right: margin },
+          head: [['NO', 'DESKRIPSI', 'HARGA', 'QTY', 'TOTAL']],
+          body: tableRows,
+          theme: 'striped',
+          headStyles: {
+            fillColor: greenDark,
+            textColor: [255, 255, 255],
+            fontStyle: 'bold',
+            fontSize: 8.5,
+            halign: 'left',
+            cellPadding: 3.5
+          },
+          bodyStyles: {
+            fontSize: 9,
+            textColor: [30, 41, 59],
+            cellPadding: 3.5
+          },
+          alternateRowStyles: {
+            fillColor: [248, 250, 252]
+          },
+          columnStyles: {
+            0: { halign: 'center', cellWidth: 13 },
+            1: { halign: 'left' },
+            2: { halign: 'right', cellWidth: 34 },
+            3: { halign: 'center', cellWidth: 18 },
+            4: { halign: 'right', cellWidth: 38, fontStyle: 'bold' }
+          },
+          didParseCell: function(data) {
+            if (data.section === 'head') {
+              if (data.column.index === 0 || data.column.index === 3) data.cell.styles.halign = 'center';
+              if (data.column.index === 2 || data.column.index === 4) data.cell.styles.halign = 'right';
+            }
+          }
+        });
+
+        yPos = doc.lastAutoTable.finalY + 10;
+
+        if (yPos > pageHeight - 95) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        const totals = getCalculatedTotals();
+        const leftColWidth = 96;
+        const rightColX = margin + leftColWidth + 8;
+        const rightColWidth = pageWidth - margin - rightColX;
+
+        // ---- BOTTOM LEFT: JATUH TEMPO, SYARAT & METODE PEMBAYARAN ----
+        let leftY = yPos;
+
+        doc.setFillColor(255, 247, 237);
+        doc.setDrawColor(254, 215, 170);
+        doc.roundedRect(margin, leftY, 76, 8, 2, 2, 'FD');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(194, 65, 12);
+        doc.text(`JATUH TEMPO: ${dueDateStr}`, margin + 3.5, leftY + 5.3);
+        leftY += 13;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(...greenDark);
+        doc.text('SYARAT & KETENTUAN', margin, leftY);
+        leftY += 4.5;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.3);
+        doc.setTextColor(71, 85, 105);
+        const termsLines = doc.splitTextToSize(appSettings.terms, leftColWidth);
+        doc.text(termsLines, margin, leftY);
+        leftY += (termsLines.length * 4) + 5;
+
+        doc.setFillColor(248, 250, 252);
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin, leftY, leftColWidth, 24, 2, 2, 'FD');
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(...greenDark);
+        doc.text('METODE PEMBAYARAN', margin + 4, leftY + 5.5);
+
+        doc.setFontSize(8.5);
+        const payRows = [
+          ['Bank', appSettings.bankName],
+          ['Account Name', appSettings.accountName],
+          ['Account Number', appSettings.accountNumber]
+        ];
+        payRows.forEach((row, i) => {
+          const ry = leftY + 11 + (i * 4.8);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(...slateMuted);
+          doc.text(row[0], margin + 4, ry);
+          doc.text(':', margin + 33, ry);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...slateDark);
+          doc.text(row[1], margin + 36, ry);
+        });
+
+        // ---- BOTTOM RIGHT: SUMMARY & SIGNATURE ----
+        let rightY = yPos;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...slateMuted);
+        doc.text('SUB-TOTAL', rightColX, rightY + 4);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...slateDark);
+        doc.text(formatRupiah(totals.subTotal), pageWidth - margin, rightY + 4, { align: 'right' });
+        rightY += 7;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...slateMuted);
+        doc.text('PAJAK', rightColX, rightY + 4);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...slateDark);
+        doc.text(totals.taxAmount > 0 ? formatRupiah(totals.taxAmount) : '0', pageWidth - margin, rightY + 4, { align: 'right' });
+        rightY += 7;
+
+        if (totals.dpAmount > 0) {
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(...slateMuted);
+          doc.text('DP / UANG MUKA', rightColX, rightY + 4);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...blueOcean);
+          doc.text('- ' + formatRupiah(totals.dpAmount), pageWidth - margin, rightY + 4, { align: 'right' });
+          rightY += 7;
+        }
+
+        // Highlighted Sisa Tagihan Bar
+        rightY += 2;
+        doc.setFillColor(...greenDark);
+        doc.roundedRect(rightColX - 2, rightY, rightColWidth + 2, 10, 2, 2, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Sisa Tagihan', rightColX + 1.5, rightY + 6.5);
+        doc.text(formatRupiah(totals.remaining), pageWidth - margin - 2, rightY + 6.5, { align: 'right' });
+        rightY += 16;
+
+        // Optional Stempel LUNAS di PDF
+        const isPaid = document.getElementById('togglePaidStamp').checked;
+        if (isPaid) {
+          doc.saveGraphicsState();
+          doc.setDrawColor(22, 163, 74);
+          doc.setTextColor(22, 163, 74);
+          doc.setLineWidth(0.9);
+          const stampX = rightColX + 4;
+          const stampY = rightY + 4;
+          doc.roundedRect(stampX, stampY - 7, 30, 11, 2, 2, 'S');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(13);
+          doc.text('LUNAS', stampX + 15, stampY + 0.5, { align: 'center' });
+          doc.restoreGraphicsState();
+        }
+
+        // Signature Image (if uploaded)
+        if (appSettings.signatureDataUrl) {
+          const sigObj = await loadImageAsDataURL(appSettings.signatureDataUrl);
+          if (sigObj && sigObj.dataUrl) {
+            const maxSigW = 36;
+            const maxSigH = 18;
+            const sRatio = sigObj.width / sigObj.height;
+            let sh = maxSigH;
+            let sw = sh * sRatio;
+            if (sw > maxSigW) {
+              sw = maxSigW;
+              sh = sw / sRatio;
+            }
+            doc.addImage(sigObj.dataUrl, sigObj.format, pageWidth - margin - sw, rightY, sw, sh);
+            rightY += sh + 4;
+          } else {
+            rightY += 16;
+          }
+        } else {
+          rightY += 16;
+        }
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(...slateDark);
+        doc.text(appSettings.signerName, pageWidth - margin, rightY, { align: 'right' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(...slateMuted);
+        doc.text(appSettings.signerTitle, pageWidth - margin, rightY + 4.8, { align: 'right' });
+
+        // ---- FOOTER (ALWAYS AT BOTTOM OF PAGE) ----
+        const footerY = pageHeight - 20;
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(margin, footerY, pageWidth - margin, footerY);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
+        doc.setTextColor(...greenDark);
+        doc.text('THANK YOU FOR YOUR BUSINESS', pageWidth / 2, footerY + 6.5, { align: 'center' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(...slateMuted);
+        const footerContact = `${appSettings.companyAddress}  |  ${appSettings.companyPhone}  |  ${appSettings.companyEmail}`;
+        doc.text(footerContact, pageWidth / 2, footerY + 11.5, { align: 'center' });
+
+        // Clean filename: INV_[Nomor]_[NamaPenerima].pdf
+        const cleanInv = invNo.replace(/[^a-zA-Z0-9_-]/g, '');
+        const cleanRec = recName.replace(/[^a-zA-Z0-9\s]/g, '').trim().split(/\s+/).slice(0, 4).join('_') || 'Customer';
+        const fileName = `INV_${cleanInv}_${cleanRec}.pdf`;
+
+        doc.save(fileName);
+
+        // Jika logo terblokir CORS di mode offline file://, beri tahu pengguna secara ramah
+        if (logoBlockedOffline) {
+          Swal.fire({
+            icon: 'info',
+            title: 'PDF Berhasil Diunduh (Info Logo Offline)',
+            html: `
+              <p class="small mb-2">PDF <strong>${escapeHtml(fileName)}</strong> sudah berhasil diunduh, namun browser memblokir pembacaan file <code>logo-bas.jpeg</code> karena aplikasi dibuka langsung dari file lokal (<code>file://</code>).</p>
+              <p class="small mb-0"><strong>Solusi permanen:</strong> Klik menu <strong>Pengaturan &amp; Logo</strong> di pojok kanan atas lalu unggah <code>logo-bas.jpeg</code> sekali saja. Logo akan tersimpan otomatis di browser dan selalu muncul di PDF!</p>
+            `,
+            confirmButtonText: 'Buka Pengaturan Logo',
+            showCancelButton: true,
+            cancelButtonText: 'Nanti Saja',
+            confirmButtonColor: '#14532d'
+          }).then((res) => {
+            if (res.isConfirmed) openSettingsModal();
+          });
+        } else {
+          showToast('success', `PDF "${fileName}" berhasil diunduh!`);
+        }
+      } catch (err) {
+        console.error('PDF generation error:', err);
+        Swal.fire('Gagal Membuat PDF', 'Terjadi kesalahan saat memproses file PDF. Silakan coba lagi.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>
