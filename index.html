@@ -338,12 +338,12 @@
     }
 
     .inv-logo-img {
-      max-height: 78px;
-      max-width: 180px;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      display: block;
+     max-height: 110px;
+  max-width: 240px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
     }
 
     .inv-company-name {
@@ -2218,8 +2218,8 @@ Salam hangat,
         let leftHeaderBottomY = cursorY + 4;
         if (logoResult && logoResult.dataUrl) {
           // Hitung rasio aspek asli agar logo proporsional (tinggi maks 24mm, lebar maks 52mm)
-          const maxH = 24;
-          const maxW = 52;
+          const maxH = 34;
+          const maxW = 70;
           const aspectRatio = logoResult.width / logoResult.height;
           let drawH = maxH;
           let drawW = drawH * aspectRatio;
