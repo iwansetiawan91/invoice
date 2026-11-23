@@ -849,7 +849,7 @@
                     <span class="inv-meta-label">INVOICE #</span> <span id="prevInvoiceNo">001</span>
                   </div>
                   <div class="inv-meta-line">
-                    <span class="inv-meta-label">INVOICE DATE:</span> <span id="prevInvoiceDate">24 November 2026</span>
+                    <span class="inv-meta-label">TANGGAL INVOICE:</span> <span id="prevInvoiceDate">24 November 2026</span>
                   </div>
                   <div class="inv-meta-line">
                     <span class="inv-meta-label">JATUH TEMPO:</span> <span id="prevDueDateTop">01 Desember 2026</span>
@@ -2261,7 +2261,7 @@ Salam hangat,
 
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...slateMuted);
-        doc.text(`INVOICE DATE: ${invDateStr}`, pageWidth - margin, cursorY + 23.5, { align: 'right' });
+        doc.text(`TANGGAL INVOICE: ${invDateStr}`, pageWidth - margin, cursorY + 23.5, { align: 'right' });
         doc.text(`JATUH TEMPO: ${dueDateStr}`, pageWidth - margin, cursorY + 28.5, { align: 'right' });
 
         // Divider Line
