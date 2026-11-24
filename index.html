@@ -662,7 +662,7 @@
         <div class="app-card mb-3">
           <div class="app-card-header">
             <h2 class="app-card-title"><i class="bi bi-file-earmark-medical"></i> Informasi Invoice</h2>
-            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1" style="font-size: 0.72rem;">Jatuh Tempo +7 Hari</span>
+            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1" style="font-size: 0.72rem;">Jatuh Tempo +5 Hari</span>
           </div>
           <div class="app-card-body">
             <div class="row g-3">
@@ -1341,7 +1341,7 @@
 
       const todayStr = toInputDateString(new Date());
       document.getElementById('invoiceDate').value = todayStr;
-      document.getElementById('dueDate').value = addDaysToDateString(todayStr, 7);
+      document.getElementById('dueDate').value = addDaysToDateString(todayStr, 5);
 
       document.getElementById('recipientName').value = '';
       document.getElementById('recipientAddress').value = '';
@@ -1446,7 +1446,7 @@
     function onInvoiceDateChange() {
       const invDate = document.getElementById('invoiceDate').value;
       if (invDate) {
-        document.getElementById('dueDate').value = addDaysToDateString(invDate, 7);
+        document.getElementById('dueDate').value = addDaysToDateString(invDate, 5);
       }
       renderPreview();
     }
